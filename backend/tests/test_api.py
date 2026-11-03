@@ -83,3 +83,27 @@ class TestMockModelIsolation:
         with patch.object(predictor, "predict", side_effect=InferenceError("boom")):
             r = client.post("/api/predict", json=VALID_LISTING)
             assert r.status_code == 422
+            body = r.json()
+            assert body["detail"] == "boom"
+
+    def test_inference_error_returns_jsonresponse(self, client: TestClient) -> None:
+        """The InferenceError handler must return a real JSONResponse, not an HTTPException."""
+        from fastapi.responses import JSONResponse
+
+        with patch.object(
+            predictor, "predict", side_effect=InferenceError("bad features")
+        ):
+            r = client.post("/api/predict", json=VALID_LISTING)
+        assert r.status_code == 422
+        assert r.headers["content-type"].startswith("application/json")
+        assert r.json() == {"detail": "bad features"}
+
+        # The registered handler must literally return a JSONResponse instance.
+        import asyncio
+
+        from app.main import inference_error_handler
+
+        fake_request = type("R", (), {})()
+        result = asyncio.run(inference_error_handler(fake_request, InferenceError("x")))
+        assert isinstance(result, JSONResponse)
+        assert result.status_code == 422

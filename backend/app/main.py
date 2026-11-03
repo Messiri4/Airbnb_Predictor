@@ -8,6 +8,7 @@ import sklearn
 import xgboost
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app.inference import InferenceError, PricePredictor
 from app.logging_setup import configure_logging
@@ -56,7 +57,7 @@ app.add_middleware(
 @app.exception_handler(InferenceError)
 async def inference_error_handler(request: Request, exc: InferenceError):
     logger.warning("Inference error: %s", exc)
-    return HTTPException(status_code=422, detail=str(exc))
+    return JSONResponse(status_code=422, content={"detail": str(exc)})
 
 
 @app.get("/health", response_model=HealthResponse)
