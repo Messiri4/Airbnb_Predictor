@@ -9,10 +9,9 @@ import xgboost
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.inference import PricePredictor, InferenceError
-from app.schemas import HealthResponse, ListingFeatures, PredictionResponse
-
+from app.inference import InferenceError, PricePredictor
 from app.logging_setup import configure_logging
+from app.schemas import HealthResponse, ListingFeatures, PredictionResponse
 
 configure_logging()
 logger = logging.getLogger(__name__)

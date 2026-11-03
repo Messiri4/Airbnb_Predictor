@@ -95,7 +95,7 @@ class PricePredictor:
         frame = pd.DataFrame([{k: features[k] for k in FEATURE_ORDER}])
         try:
             prediction = self._pipeline.predict(frame)
-        except Exception as exc:  # noqa: BLE001 - surfaced as a controlled API error
+        except Exception as exc:
             raise InferenceError(f"Model prediction failed: {exc}") from exc
 
         price = float(prediction[0])

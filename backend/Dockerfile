@@ -10,7 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app ./app
 COPY tests ./tests
 COPY pytest.ini .
-COPY models /app/models
+COPY --from=models . /app/models
 
 ENV MODEL_PATH=/app/models/best_price_model.pkl
 EXPOSE 8000

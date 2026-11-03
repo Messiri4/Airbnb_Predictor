@@ -70,12 +70,14 @@ class TestPredictEndpoint:
 
 class TestMockModelIsolation:
     def test_unloaded_model_returns_503(self) -> None:
-        with patch.object(predictor, "_pipeline", None), \
-             patch.object(PricePredictor, "is_loaded", property(lambda self: False)):
-            with TestClient(app) as c:
-                r = c.post("/api/predict", json=VALID_LISTING)
-                assert r.status_code == 503
-                assert "not available" in r.json()["detail"].lower()
+        with (
+            patch.object(predictor, "_pipeline", None),
+            patch.object(PricePredictor, "is_loaded", property(lambda self: False)),
+            TestClient(app) as c,
+        ):
+            r = c.post("/api/predict", json=VALID_LISTING)
+            assert r.status_code == 503
+            assert "not available" in r.json()["detail"].lower()
 
     def test_model_failure_maps_to_422(self, client: TestClient) -> None:
         with patch.object(predictor, "predict", side_effect=InferenceError("boom")):
