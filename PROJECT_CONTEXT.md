@@ -143,9 +143,14 @@ Compared with the raw-price model, the log transform improves typical listings d
 
 _(Segment table shown above is from the untuned log model; re-run the segment cell against the tuned pipeline if exact tuned numbers are needed.)_
 
+### Visual comparisons in the notebook
+
+- **Model Persistence section:** three annotated bar charts compare tuned vs untuned log-target XGBoost on Test MAE, Test RMSE, and Test R² — the tuned model wins MAE, the untuned keeps RMSE/R².
+- **DSS Price Suggestion section:** a grouped bar chart shows actual price vs tuned suggestion vs untuned suggestion for 10 real test-set listings, plus a difference chart (tuned − untuned). Mean absolute difference on those listings: **$5.63** — the tuned model changes typical suggestions only slightly.
+
 ## 5. Deployment artifacts
 
-- **`best_price_model.pkl`** — the full preprocessing + log-target XGBoost pipeline. Reload-and-predict verified; returns real dollars.
+- **`best_price_model.pkl`** — the full preprocessing + **tuned** log-target XGBoost pipeline. Reload-and-predict verified; returns real dollars.
 - **`app.py`** — Streamlit UI sending raw category labels (`"Brooklyn"`, `"Entire home/apt"`); no manual integer maps. Run with `.venv/bin/streamlit run app.py`.
 - **DSS function** — `suggest_price(...)` in the notebook; verified against test-set listings showing actual vs suggested prices side by side (average gap $58.19, matching test MAE).
 
@@ -165,12 +170,12 @@ _(Segment table shown above is from the untuned log model; re-run the segment ce
 | `suggest_price()`                      | ✅ Works with raw labels, returns dollars                      |
 | Model persistence                      | ✅ Full pipeline saved and reload-verified                     |
 | Hyperparameter tuning                  | ✅ RandomizedSearchCV on the log model; tuned variant promoted |
+| Chart layout quality                   | ✅ All notebook charts fixed — no overlapping titles/labels    |
 
 ## 7. Next steps
 
-1. **Review tuned-model outcome** — confirm the tuned log-XGBoost's test MAE vs the untuned model and keep the winner (automatic in the notebook).
-2. **Feature engineering** — the model explains only ~17% of price variance; add features such as distance to Manhattan/substrway, neighborhood aggregates (mean price per `neighbourhood`), text signals from `name`, or availability ratios.
-3. **Prediction explanations** — surface feature contributions (e.g., SHAP values) in the Streamlit app so hosts see _why_ a price is suggested.
-4. **Prediction intervals / price ranges** — hosts likely want a range, not a point estimate.
-5. **Refactor for production** — move pipeline/training code out of the notebook into modules; add tests; pin dependency versions.
-6. **Final unbiased estimate** — reserve a truly fresh dataset (or time-based split) for a last untouched evaluation.
+1. **Feature engineering** — the model explains only ~15% of price variance (tuned); add features such as distance to Manhattan/subway, neighborhood aggregates (mean price per `neighbourhood`), text signals from `name`, or availability ratios.
+2. **Prediction explanations** — surface feature contributions (e.g., SHAP values) in the Streamlit app so hosts see _why_ a price is suggested.
+3. **Prediction intervals / price ranges** — hosts likely want a range, not a point estimate.
+4. **Refactor for production** — move pipeline/training code out of the notebook into modules; add tests; pin dependency versions.
+5. **Final unbiased estimate** — reserve a truly fresh dataset (or time-based split) for a last untouched evaluation.

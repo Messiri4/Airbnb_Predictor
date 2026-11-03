@@ -1,0 +1,37 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      additional_contexts:
+        models: ./models
+    # The Dockerfile copies models via build context root; simplest robust setup:
+    environment:
+      - MODEL_PATH=/app/models/best_price_model.pkl
+      - LOG_LEVEL=INFO
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)",
+        ]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/"]
+      interval: 30s
+      timeout: 5s
+    restart: unless-stopped
