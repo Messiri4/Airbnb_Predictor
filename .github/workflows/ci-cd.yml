@@ -99,6 +99,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Compute lowercase image names
+        id: image_names
+        run: |
+          OWNER_LC="$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')"
+          REPO_LC="$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')"
+          echo "owner=${OWNER_LC}" >> "$GITHUB_OUTPUT"
+          echo "repo=${REPO_LC}" >> "$GITHUB_OUTPUT"
+          echo "backend=ghcr.io/${OWNER_LC}/airbnb-backend" >> "$GITHUB_OUTPUT"
+          echo "frontend=ghcr.io/${OWNER_LC}/airbnb-frontend" >> "$GITHUB_OUTPUT"
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -114,8 +124,8 @@ jobs:
             models=./models
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/airbnb-backend:${{ github.sha }}
-            ghcr.io/${{ github.repository }}/airbnb-backend:latest
+            ${{ steps.image_names.outputs.backend }}:${{ github.sha }}
+            ${{ steps.image_names.outputs.backend }}:latest
 
       - name: Frontend — build & push (SHA-tagged)
         uses: docker/build-push-action@v6
@@ -123,14 +133,14 @@ jobs:
           context: ./frontend
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/airbnb-frontend:${{ github.sha }}
-            ghcr.io/${{ github.repository }}/airbnb-frontend:latest
+            ${{ steps.image_names.outputs.frontend }}:${{ github.sha }}
+            ${{ steps.image_names.outputs.frontend }}:latest
 
       - name: Summary
         run: |
           echo "### Published images" >> $GITHUB_STEP_SUMMARY
-          echo "- \`ghcr.io/${{ github.repository }}/airbnb-backend:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- \`ghcr.io/${{ github.repository }}/airbnb-frontend:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`${{ steps.image_names.outputs.backend }}:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`${{ steps.image_names.outputs.frontend }}:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
 
   # NOTE: Continuous *Deployment* to a cloud host is intentionally NOT configured.
   # It will be added after the hosting provider is selected and approved.
