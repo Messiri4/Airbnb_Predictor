@@ -76,7 +76,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./backend
-          additional-contexts: |
+          build-contexts: |
             models=./models
           push: false
           tags: airbnb-backend:ci
@@ -110,7 +110,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./backend
-          additional-contexts: |
+          build-contexts: |
             models=./models
           push: true
           tags: |
