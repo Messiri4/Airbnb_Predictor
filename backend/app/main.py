@@ -56,7 +56,7 @@ app.add_middleware(
 @app.exception_handler(InferenceError)
 async def inference_error_handler(request: Request, exc: InferenceError):
     logger.warning("Inference error: %s", exc)
-    return HTTPException(status_code=422, detail=str(exc))  # noqa: return handled by raising
+    return HTTPException(status_code=422, detail=str(exc))
 
 
 @app.get("/health", response_model=HealthResponse)
