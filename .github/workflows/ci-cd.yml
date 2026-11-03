@@ -114,8 +114,8 @@ jobs:
             models=./models
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/airbnb-backend:${{ github.sha }}
-            ghcr.io/${{ github.repository_owner }}/airbnb-backend:latest
+            ghcr.io/${{ github.repository }}/airbnb-backend:${{ github.sha }}
+            ghcr.io/${{ github.repository }}/airbnb-backend:latest
 
       - name: Frontend — build & push (SHA-tagged)
         uses: docker/build-push-action@v6
@@ -123,14 +123,14 @@ jobs:
           context: ./frontend
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/airbnb-frontend:${{ github.sha }}
-            ghcr.io/${{ github.repository_owner }}/airbnb-frontend:latest
+            ghcr.io/${{ github.repository }}/airbnb-frontend:${{ github.sha }}
+            ghcr.io/${{ github.repository }}/airbnb-frontend:latest
 
       - name: Summary
         run: |
           echo "### Published images" >> $GITHUB_STEP_SUMMARY
-          echo "- \`ghcr.io/${{ github.repository_owner }}/airbnb-backend:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- \`ghcr.io/${{ github.repository_owner }}/airbnb-frontend:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ghcr.io/${{ github.repository }}/airbnb-backend:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`ghcr.io/${{ github.repository }}/airbnb-frontend:${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
 
   # NOTE: Continuous *Deployment* to a cloud host is intentionally NOT configured.
   # It will be added after the hosting provider is selected and approved.
