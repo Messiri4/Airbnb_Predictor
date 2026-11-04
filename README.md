@@ -178,6 +178,28 @@ pickle must be loaded with compatible library versions.
 - The original `Airbnb_Price_Prediction.ipynb` and historical scripts are preserved
   untouched.
 
+## ☁️ Render Deployment (Free Tier)
+
+The app deploys to [Render](https://render.com) free tier via the Blueprint in `render.yaml`:
+
+| Service | Type | Notes |
+|---|---|---|
+| `airbnb-pricing-api` | Web Service (Docker, `free`) | FastAPI + saved model; health check `/health`; spins down after 15 min idle |
+| `airbnb-pricing-frontend` | Static Site (free, always on) | Vite build → CDN; SPA rewrite to `index.html` |
+
+**Deploy steps:**
+1. Push this repo to GitHub → Render dashboard → **New → Blueprint** → select the repo. Render reads `render.yaml`.
+2. When prompted for `VITE_API_BASE`, enter the backend's public URL (e.g. `https://airbnb-pricing-api-xxxx.onrender.com`).
+3. When prompted for `ALLOWED_ORIGINS`, enter the frontend's public URL (e.g. `https://airbnb-pricing-frontend.onrender.com`).
+4. Deploy both. Verify `https://<backend-url>/health` returns `"status":"ok"`.
+
+**Live demo:** _URL placeholder — to be added after first deployment._
+
+**Free-tier limitations (documented, not invented):**
+- The backend **spins down after ~15 minutes of inactivity**; the first request after a spin-down takes ~50 seconds while it wakes (the frontend shows a friendly "waking up" message).
+- Free web services get 512 MB RAM and 750 instance-hours/month — sufficient for one always-deployable backend.
+- Hitting Render's free bandwidth quota suspends free services until the next month; no billing occurs without a payment method.
+
 ## 📄 License
 
 MIT License

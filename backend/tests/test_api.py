@@ -5,10 +5,10 @@ import math
 from unittest.mock import patch
 
 import pytest
-from app.inference import InferenceError, PricePredictor
-from app.main import app, predictor
 from fastapi.testclient import TestClient
 
+from app.inference import InferenceError, PricePredictor
+from app.main import app, predictor
 from tests.conftest import MODEL_PATH, VALID_LISTING
 
 

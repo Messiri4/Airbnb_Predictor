@@ -1,0 +1,43 @@
+# Render Blueprint — Airbnb Pricing Intelligence DSS
+# Free tier only: no paid instance types, no databases, no persistent disks.
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  # FastAPI backend serving the saved tuned Log-XGBoost pipeline.
+  - type: web
+    name: airbnb-pricing-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    dockerCommand: sh -c "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: MODEL_PATH
+        value: /app/models/best_price_model.pkl
+      - key: LOG_LEVEL
+        value: INFO
+      # Set to the deployed frontend origin after the first deploy creates it
+      # (Render dashboard → Environment). No wildcard CORS.
+      - key: ALLOWED_ORIGINS
+        sync: false
+
+  # React + Vite static site (free, always on, served from CDN).
+  - type: web_static
+    name: airbnb-pricing-frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./frontend/dist
+    rootDir: frontend
+    # Single-page app: serve index.html for unknown paths.
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      # Production API base — set in the Render dashboard to the backend's
+      # public onrender.com URL after that service exists.
+      - key: VITE_API_BASE
+        sync: false
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY

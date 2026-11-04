@@ -5,6 +5,7 @@ import math
 from pathlib import Path
 
 import pytest
+
 from app.inference import (
     CATEGORICAL_FEATURES,
     FEATURE_ORDER,
