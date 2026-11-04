@@ -1,4 +1,3 @@
-
 # Render Blueprint — Airbnb Pricing Intelligence DSS
 # Free tier only: no paid instances, databases, or persistent disks.
 
@@ -9,7 +8,9 @@ services:
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
     dockerContext: .
-    dockerCommand: python -m uvicorn app.main:app --host 0.0.0.0 --port 10000
+    # Startup is defined by the Dockerfile CMD (uvicorn via sh -c, binding to
+    # Render's PORT). No dockerCommand override — an override is parsed with
+    # naive whitespace splitting and can break the command.
     plan: free
     healthCheckPath: /health
     envVars:
