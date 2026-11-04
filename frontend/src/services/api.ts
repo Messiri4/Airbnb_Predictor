@@ -12,9 +12,19 @@ import type {
   PredictionResponse,
 } from "./types";
 
-const API_BASE: string =
+const RAW_BASE: string =
   (import.meta.env?.VITE_API_BASE as string | undefined)?.replace(/\/$/, "") ??
-  "/api";
+  "";
+
+/**
+ * Accepts either the bare backend origin (https://airbnb-pricing-api.onrender.com)
+ * or an origin that already ends with /api. Normalizes to always target
+ * <origin>/api/... — the paths our FastAPI app actually registers.
+ */
+const API_BASE: string =
+  RAW_BASE.endsWith("/api") || RAW_BASE === ""
+    ? RAW_BASE || "/api"
+    : `${RAW_BASE}/api`;
 
 export class BackendUnreachableError extends Error {
   constructor(message = "Backend unreachable — it may be waking up.") {
