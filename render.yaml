@@ -9,7 +9,7 @@ services:
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
     dockerContext: .
-    dockerCommand: sh -c "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"
+    dockerCommand: python -m uvicorn app.main:app --host 0.0.0.0 --port 10000
     plan: free
     healthCheckPath: /health
     envVars:
