@@ -22,10 +22,11 @@ services:
         sync: false
 
   # React + Vite static site (free, always on, served from CDN).
-  - type: web_static
+  - type: web
     name: airbnb-pricing-frontend
+    runtime: static
     buildCommand: npm ci && npm run build
-    staticPublishPath: ./dist
+    staticPublishPath: ./frontend/dist
     rootDir: frontend
     # Single-page app: serve index.html for unknown paths.
     routes:
