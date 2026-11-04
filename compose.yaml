@@ -1,13 +1,15 @@
 services:
   backend:
     build:
-      context: ./backend
-      additional_contexts:
-        models: ./models
+      context: .
+      dockerfile: backend/Dockerfile
+    image: airbnb-local-backend
     # The Dockerfile copies models via build context root; simplest robust setup:
     environment:
       - MODEL_PATH=/app/models/best_price_model.pkl
       - LOG_LEVEL=INFO
+      # Local dev CORS default; Render sets its own ALLOWED_ORIGINS.
+      - ALLOWED_ORIGINS=http://localhost:8080,http://localhost:5173
     ports:
       - "8000:8000"
     healthcheck:
@@ -25,13 +27,14 @@ services:
 
   frontend:
     build: ./frontend
+    image: airbnb-local-frontend
     ports:
       - "8080:80"
     depends_on:
       backend:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost/"]
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:80/"]
       interval: 30s
       timeout: 5s
     restart: unless-stopped

@@ -43,9 +43,16 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS: allow the frontend origins via env in dev; Nginx proxy makes this
-# unnecessary in production (same-origin), but keep it configurable.
-ALLOWED_ORIGINS = ["http://localhost:5173", "http://localhost:8080"]
+# CORS: allowed origins come from the ALLOWED_ORIGINS env var (comma-separated).
+# Defaults cover local Docker/dev. In production, set ALLOWED_ORIGINS to the
+# deployed frontend's HTTPS origin (e.g. https://airbnb-frontend.onrender.com).
+import os
+
+DEFAULT_ORIGINS = ["http://localhost:5173", "http://localhost:8080"]
+ALLOWED_ORIGINS = [
+    o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "").split(",") if o.strip()
+] or DEFAULT_ORIGINS
+logger.info("CORS allowed origins: %s", ALLOWED_ORIGINS)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
