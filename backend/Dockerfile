@@ -2,8 +2,10 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install pinned dependencies first for layer caching
-COPY requirements.txt .
+# Install pinned dependencies first for layer caching.
+# backend/requirements.txt pins fastapi, uvicorn, pydantic, pandas, numpy,
+# scikit-learn and xgboost at the versions the saved model artifact requires.
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application + the saved model artifact (no training at build time).
