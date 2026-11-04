@@ -1,9 +1,8 @@
 services:
   backend:
     build:
-      context: ./backend
-      additional_contexts:
-        models: ./models
+      context: .
+      dockerfile: backend/Dockerfile
     image: airbnb-local-backend
     # The Dockerfile copies models via build context root; simplest robust setup:
     environment:

@@ -7,7 +7,7 @@ services:
     name: airbnb-pricing-api
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
-    dockerContext: ./backend
+    dockerContext: .
     dockerCommand: sh -c "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"
     plan: free
     healthCheckPath: /health
@@ -25,7 +25,7 @@ services:
   - type: web_static
     name: airbnb-pricing-frontend
     buildCommand: npm ci && npm run build
-    staticPublishPath: ./frontend/dist
+    staticPublishPath: ./dist
     rootDir: frontend
     # Single-page app: serve index.html for unknown paths.
     routes:

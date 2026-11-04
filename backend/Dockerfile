@@ -6,11 +6,14 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application + the saved model artifact (no training at build time)
-COPY app ./app
-COPY tests ./tests
-COPY pytest.ini .
-COPY --from=models . /app/models
+# Copy application + the saved model artifact (no training at build time).
+# Paths are relative to the repo root: build with either
+#   docker build -f backend/Dockerfile .          (Render / repo-root context)
+#   docker compose build backend                  (uses additional_contexts)
+COPY backend/app ./app
+COPY backend/tests ./tests
+COPY backend/pytest.ini .
+COPY models ./models
 
 ENV MODEL_PATH=/app/models/best_price_model.pkl
 EXPOSE 8000
