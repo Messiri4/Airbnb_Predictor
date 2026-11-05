@@ -1,4 +1,6 @@
 # Airbnb Pricing Intelligence — Decision Support System
+<img width="1440" height="836" alt="Screen Shot 2026-11-04 at 7 18 32 PM" src="https://github.com/user-attachments/assets/e84eb649-bc05-4986-9e0c-5a2663d51790" />
+
 
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)
@@ -355,9 +357,15 @@ MIT License
 
 ## Screenshots
 
-_Suggested additions (not included to avoid fake images):_
-
 1. The prediction form with a completed listing (desktop + mobile widths)
 2. A prediction result card showing the estimated price
+   <img width="1440" height="836" alt="Screen Shot 2026-11-04 at 7 18 32 PM" src="https://github.com/user-attachments/assets/994db322-5adb-4857-b0fb-2065ad34906e" />
+   <img width="846" height="721" alt="Screen Shot 2026-11-04 at 7 40 26 PM" src="https://github.com/user-attachments/assets/a3aef7a2-3658-41ff-8db6-ef77b78b6c87" />
+
+
 3. The FastAPI `/docs` Swagger page
+   <img width="1440" height="900" alt="Screen Shot 2026-11-04 at 7 50 59 PM" src="https://github.com/user-attachments/assets/0de29787-3bed-42e3-82e6-b1e07f426dd4" />
+
 4. GitHub Actions pipeline passing
+   <img width="1440" height="830" alt="Screen Shot 2026-11-04 at 7 55 16 PM" src="https://github.com/user-attachments/assets/bff8a37c-6567-4ae8-aa30-c1df82277b7f" />
+
